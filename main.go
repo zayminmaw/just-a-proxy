@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,10 +33,13 @@ func fetchHTML(url string) (string,error) {
 
 func getPage(c *gin.Context){
 	url, ok := c.GetQuery("url")
+
+
 	if ok == false{
 		c.String(http.StatusBadRequest, "URL malformed")
 		return 
 	}
+
 
 	html,err := fetchHTML(url)
 
@@ -50,6 +54,7 @@ func getPage(c *gin.Context){
 
 func main(){
 	router := gin.Default()
+	router.Use(cors.Default())
 	router.GET("fetch",getPage)
 	router.Run("localhost:8080")
 }
